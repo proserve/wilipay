@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta2 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: beetfree-deployment
+spec:
+  selector:
+    matchLabels:
+      app: beetfree-frontend
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: beetfree-frontend
+    spec:
+      containers:
+      - name: beetfree-frontend
+        image: gcr.io/beetfree-193913/beetfree-frontend:v0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
