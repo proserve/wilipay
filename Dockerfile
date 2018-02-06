@@ -1,12 +1,14 @@
-FROM php:7.2-fpm-alpine3.6
+FROM richarvey/nginx-php-fpm:1.4.1
 
-COPY . /var/www/html
-WORKDIR /var/www/html
+ENV WEBROOT=/var/www/html/public/
+ENV SKIP_COMPOSER=1
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --filename=composer --install-dir=$PWD
+COPY . /var/www/html/
+WORKDIR /var/www/html/
 
-#TODO: fix: not run composer as root
-RUN ./composer install
-CMD php artisan serve --port=80 --host=0.0.0.0
-EXPOSE 80 443
+RUN chmod -R 777 /var/www/html/storage \
+    && chmod -R 777 /var/www/html/bootstrap/cache
+
+RUN composer install --no-interaction
+
+EXPOSE 80
