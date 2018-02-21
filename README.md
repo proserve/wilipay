@@ -1,4 +1,5 @@
 # wilipay
+[![Build Status](https://travis-ci.com/wilipay/wilipay.svg?token=gre7NQjoinSkmrrbkqMV&branch=master)](https://travis-ci.com/wilipay/wilipay)
 1. [How to setup kubernetes cluster to connect to Google clous SQL](https://cloud.google.com/sql/docs/postgres/connect-kubernetes-engine)
 2. [how to run minikube with local containers](https://stackoverflow.com/questions/42564058/how-to-use-local-docker-images-in-kubernetes/42564211)
 3. how to authorise minikube to pull images from Google Cloud Container Registry

@@ -19,8 +19,6 @@ spec:
         ports:
           - containerPort: 80
         env:
-          - name: DB_HOST
-            value: 127.0.0.1:5432
           # These secrets are required to start the pod.
           # [START cloudsql_DB_secrets]
           - name: DB_USERNAME

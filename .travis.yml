@@ -1,7 +1,7 @@
 # Use Dockerized infrastructure
 sudo: false
 
-# Use node_js environnement
+# Use php environnement
 language: php
 php:
   - 7.1.9
@@ -10,6 +10,7 @@ php:
 cache:
   directories:
     - "$HOME/google-cloud-sdk/"
+    - "$HOME/.composer/cache"
 
 # Install services
 services:
@@ -29,7 +30,7 @@ env:
     - KUBE_DEPLOYMENT_CONTAINER_NAME=php-fpm-nginx
 
 install:
-  - composer install --no-interaction
+  - composer install --no-interaction --optimize-autoloader
   - cp .env.example .env
   - php artisan key:generate
 
