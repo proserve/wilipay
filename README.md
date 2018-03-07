@@ -7,7 +7,7 @@
 kubectl  create secret docker-registry gcr-json-key \
           --docker-server=https://gcr.io \
           --docker-username=_json_key \
-          --docker-password="$(cat ~/Downloads/gcr-test.json)" \
+          --docker-password="$(cat ~/Documents/beetfree/service_accounts/gcr-test.json)" \
           --docker-email=khalid.ghiboub@gmail.com
 ```
 

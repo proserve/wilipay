@@ -21,9 +21,9 @@ env:
   global:
     - GOOGLE_APPLICATION_CREDENTIALS=~/gcloud-service-key.json
     - PROJECT_NAME_STG=beetfree-193913
-    - CLUSTER_NAME_STG=wilipay-staging
+    - CLUSTER_NAME_STG=wilipay
     - PROJECT_NAME_PRD=beetfree-193913
-    - CLUSTER_NAME_PRD=wilipay-staging
+    - CLUSTER_NAME_PRD=wilipay
     - CLOUDSDK_COMPUTE_ZONE=europe-west1-b
     - DOCKER_IMAGE_NAME=wilipay-web
     - KUBE_DEPLOYMENT_NAME=php-web-deployment
@@ -32,6 +32,8 @@ env:
 install:
   - composer install --no-interaction --optimize-autoloader
   - cp .env.example .env
+  - echo ACCOUNTKIT_APP_ID=$ACCOUNTKIT_APP_ID >> .env
+  - echo ACCOUNTKIT_APP_SECRET=$ACCOUNTKIT_APP_SECRET >> .env
   - php artisan key:generate
 
 before_deploy:
