@@ -19,11 +19,15 @@ class TrustProxies extends Middleware
      *
      * @var array
      */
-    protected $headers = [
-        Request::HEADER_FORWARDED => 'FORWARDED',
-        Request::HEADER_X_FORWARDED_FOR => 'X_FORWARDED_FOR',
-        Request::HEADER_X_FORWARDED_HOST => 'X_FORWARDED_HOST',
-        Request::HEADER_X_FORWARDED_PORT => 'X_FORWARDED_PORT',
-        Request::HEADER_X_FORWARDED_PROTO => 'X_FORWARDED_PROTO',
-    ];
+    protected $headers = Request::HEADER_X_FORWARDED_ALL;
+    /* [
+            Request::HEADER_FORWARDED => 0b00001, // When using RFC 7239
+            Request::HEADER_X_FORWARDED_FOR => 0b00010,
+            Request::HEADER_X_FORWARDED_HOST => 0b00100,
+            Request::HEADER_X_FORWARDED_PROTO => 0b01000,
+            Request::HEADER_X_FORWARDED_PORT => 0b10000,
+            Request::HEADER_X_FORWARDED_ALL => 0b11110, // All "X-Forwarded-*" headers
+            Request::HEADER_X_FORWARDED_AWS_ELB => 0b11010, // AWS ELB doesn't send X-Forwarded-Host
+        ]*/
+
 }
