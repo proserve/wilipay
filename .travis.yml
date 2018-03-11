@@ -1,12 +1,12 @@
 # Use Dockerized infrastructure
 sudo: false
 
-# Use php environnement
+# Use php environment
 language: php
 php:
-  - 7.1.9
+  - 7.1.13
 
-# Cache Gcloud SDK between commands
+# Cache Google cloud SDK between commands
 cache:
   directories:
     - "$HOME/google-cloud-sdk/"
@@ -20,10 +20,9 @@ services:
 env:
   global:
     - GOOGLE_APPLICATION_CREDENTIALS=~/gcloud-service-key.json
-    - PROJECT_NAME_STG=beetfree-193913
-    - CLUSTER_NAME_STG=wilipay
-    - PROJECT_NAME_PRD=beetfree-193913
-    - CLUSTER_NAME_PRD=wilipay
+    - GCP_PROJECT_NAME=beetfree-193913
+    - CLUSTER_NAME=wilipay
+    - STAGING_CLUSTER_NAME=wilipay-staging-dev
     - CLOUDSDK_COMPUTE_ZONE=europe-west1-b
     - DOCKER_IMAGE_NAME=wilipay-web
     - KUBE_DEPLOYMENT_NAME=php-web-deployment
