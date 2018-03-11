@@ -8,9 +8,9 @@ echo $GCLOUD_SERVICE_KEY_STG | base64 --decode -i > ${HOME}/gcloud-service-key.j
 gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
 
 gcloud --quiet config set project $GCP_PROJECT_NAME
-gcloud --quiet config set container/cluster $STAGING_CLUSTER_NAME
+gcloud --quiet config set container/cluster $CLUSTER_NAME
 gcloud --quiet config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
-gcloud --quiet container clusters get-credentials $STAGING_CLUSTER_NAME
+gcloud --quiet container clusters get-credentials $CLUSTER_NAME
 
 gcloud docker -- push eu.gcr.io/${GCP_PROJECT_NAME}/${DOCKER_IMAGE_NAME}
 
