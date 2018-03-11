@@ -1,0 +1,51 @@
+# Use Dockerized infrastructure
+sudo: false
+
+# Use php environnement
+language: php
+php:
+  - 7.1.9
+
+# Cache Gcloud SDK between commands
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
+    - "$HOME/.composer/cache"
+
+# Install services
+services:
+  - docker
+
+# Set env vars
+env:
+  global:
+    - GOOGLE_APPLICATION_CREDENTIALS=~/gcloud-service-key.json
+    - PROJECT_NAME_STG=beetfree-193913
+    - CLUSTER_NAME_STG=wilipay
+    - PROJECT_NAME_PRD=beetfree-193913
+    - CLUSTER_NAME_PRD=wilipay
+    - CLOUDSDK_COMPUTE_ZONE=europe-west1-b
+    - DOCKER_IMAGE_NAME=wilipay-web
+    - KUBE_DEPLOYMENT_NAME=php-web-deployment
+    - KUBE_DEPLOYMENT_CONTAINER_NAME=php-fpm-nginx
+
+install:
+  - composer install --no-interaction --optimize-autoloader
+  - cp .env.example .env
+  - echo ACCOUNTKIT_APP_ID=$ACCOUNTKIT_APP_ID >> .env
+  - echo ACCOUNTKIT_APP_SECRET=$ACCOUNTKIT_APP_SECRET >> .env
+  - php artisan key:generate
+
+before_deploy:
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+  - source /home/travis/google-cloud-sdk/path.bash.inc
+  - gcloud --quiet version
+  - gcloud --quiet components update
+  - gcloud --quiet components update kubectl
+
+deploy:
+  - provider: script
+    script: chmod +x $TRAVIS_BUILD_DIR/scripts/ci-deploy-staging.sh && $TRAVIS_BUILD_DIR/scripts/ci-deploy-staging.sh
+    skip_cleanup: true
+    on:
+      branch: master

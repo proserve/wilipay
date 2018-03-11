@@ -1,0 +1,48 @@
+apiVersion: apps/v1 # for versions after 1.9.0 use apps/v1
+kind: Deployment
+metadata:
+  name: php-web-deployment
+spec:
+  selector:
+    matchLabels:
+      app: wilipay-frontend
+  replicas: 3 # tells deployment to run 3 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: wilipay-frontend
+    spec:
+      containers:
+      - name: php-fpm-nginx
+        image: eu.gcr.io/beetfree-193913/wilipay-laravel-backend:0.1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+        env:
+          # These secrets are required to start the pod.
+          # [START cloudsql_DB_secrets]
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: cloudsql-db-credentials
+                key: password
+
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=beetfree-193913:europe-west1:wilipay-cloud-sql=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      # [END volumes]

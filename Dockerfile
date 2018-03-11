@@ -1,12 +1,11 @@
-FROM php:7.2-fpm-alpine3.6
+FROM proserve/nginx-php-fpm-laravel:0.1.0
 
-COPY . /var/www/html
-WORKDIR /var/www/html
+COPY . /var/www/html/
+WORKDIR /var/www/html/
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --filename=composer --install-dir=$PWD
+RUN chmod -R 777 /var/www/html/storage \
+    && chmod -R 777 /var/www/html/bootstrap/cache
 
-#TODO: fix: not run composer as root
-RUN ./composer install
-CMD php artisan serve --port=80 --host=0.0.0.0
-EXPOSE 80 443
+# RUN composer install --no-interaction
+CMD php artisan serve --port=8080
+EXPOSE 8080 80
