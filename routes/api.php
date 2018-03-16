@@ -17,4 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/ak-login', 'LoginController@otpLogin');
+Route::post('/ak-login', 'RegisterController@otpLogin');
+Route::post('/register', 'RegisterController@register');
+Route::put('/user/phone', 'RegisterController@editPhone')->middleware('auth:api');
+Route::put('/user/profile', 'ProfileController@editProfile')->middleware('auth:api');
+Route::put('/user/profile/address', 'ProfileController@editAddress')->middleware('auth:api');
+Route::post('/user/profile/avatar', 'ProfileController@editUserAvatar')->middleware('auth:api');
+Route::get('/test-passport', function (Request $request){
+    return response('right');
+})->middleware('auth:api');

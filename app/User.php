@@ -5,11 +5,23 @@ namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 
+/**
+ * @property \Carbon\Carbon $deleted_at
+ * @property \Carbon\Carbon $created_at
+ * @property int $id
+ * @property \Carbon\Carbon $updated_at
+ * @property mixed $email
+ * @property mixed $profile
+ */
 class User extends Authenticatable
 {
-    use SoftDeletes;
-    use Notifiable;
+    use SoftDeletes, HasApiTokens, Notifiable;
+
+    public function profile(){
+        return $this->hasOne('App\Profile');
+    }
 
     protected $dates = ['deleted_at'];
     /**
@@ -29,4 +41,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
 }

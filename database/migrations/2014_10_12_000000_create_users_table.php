@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
             $table->string('email_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletesTz();
         });
     }
 

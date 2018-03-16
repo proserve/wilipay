@@ -20,16 +20,14 @@ class TestEmail extends Mailable
 
     public function build()
     {
-        $address = 'kghiboub@gmail.com';
-        $subject = 'This is a demo!';
-        $name = 'Jane Doe';
-
-        return $this->view('emails.test')
-                    ->from($address, $name)
-                    ->cc($address, $name)
-                    ->bcc($address, $name)
-                    ->replyTo($address, $name)
-                    ->subject($subject)
-                    ->with([ 'message' => $this->data['message'] ]);
+        $address = 'support@wilipay.com';
+        //'You have successfully add a valid phone number to your account';
+        return $this->markdown('vendor.notifications.email', [
+            'level' => 'success',
+            'introLines' => ['Welcome to Wilipay', $this->data['message']],
+            'outroLines' => ['Thank you']
+        ])
+            ->from($address, 'Wilipay support')
+            ->subject($this->data['subject']);
     }
 }
