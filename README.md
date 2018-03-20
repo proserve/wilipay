@@ -16,3 +16,9 @@ kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "gcr-jso
 ```
 4. [Travis-ci integration tutorial](https://medium.com/google-cloud/continuous-delivery-in-a-microservice-infrastructure-with-google-container-engine-docker-and-fb9772e81da7)
 
+#### Fix homestead clock sync problem
+```bash 
+sudo service ntp stop
+sudo ntpd -gq
+sudo service ntp start
+```

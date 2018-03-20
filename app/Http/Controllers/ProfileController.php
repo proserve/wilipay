@@ -52,7 +52,7 @@ class ProfileController extends Controller
         $disk = Storage::disk('gcs');
         $file = $request->file('avatar');
 
-        $fileName = $user->id . '/avatar.'. $file->getClientOriginalExtension();
+        $fileName = $user->id . '/avatar.'. ($file->getClientOriginalExtension() || '.png');
         $disk->put($fileName, file_get_contents($file->getRealPath()));
         $disk->setVisibility($fileName, 'public');
         $profile = $user->profile;

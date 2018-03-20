@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Currency;
 use App\Mail\TestEmail;
 use App\Providers\AccountKit;
+use App\Sold;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -30,7 +32,13 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
-        $token = $user->createToken('wilipay Personal Access Client')->accessToken;
+
+        $token = $user->createToken(config('app.grantName'))->accessToken;
+
+        foreach (config('app.currencies') as $currency) {
+            $currency_id = Currency::where('code', $currency)->firstOrFail()->id;
+            Sold::create(['amount' => 0, 'user_id' => $user->id, 'currency_id' => $currency_id]);
+        }
         return response(['token' => $token], 201);
     }
 
@@ -48,7 +56,15 @@ class RegisterController extends Controller
             $user->national_phone = $data->phone->national_number;
             $user->country_prefix = $data->phone->country_prefix;
             $user->fb_account_kit_id = $data->id;
-            $user->save();
+            try {
+                $user->save();
+            } catch (\Illuminate\Database\QueryException $e) {
+                $errorCode = $e->errorInfo[1];
+                if ($errorCode == 7) {
+                    abort(400, 'This phone number has been already taken');
+                }
+                abort(400, 'Error occur while adding this phone number to your account');
+            }
             Mail::to($user)->send(new TestEmail([
                 "subject" => "You have add a valid phone number to your account",
                 "message" => "You have successfully add a valid phone number (" . $user->phone . ") to your account"

@@ -19,8 +19,14 @@ class User extends Authenticatable
 {
     use SoftDeletes, HasApiTokens, Notifiable;
 
-    public function profile(){
+    public function profile()
+    {
         return $this->hasOne('App\Profile');
+    }
+
+    public function solds()
+    {
+        return $this->hasMany('App\Sold');
     }
 
     protected $dates = ['deleted_at'];
@@ -39,11 +45,19 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
+    protected $visible = ['email', 'phone', 'national_phone', 'profile'];
+
 
     public function setEmailAttribute($value)
     {
         $this->attributes['email'] = strtolower($value);
     }
+
+    public static function created($callback)
+    {
+    }
+
+
 }
