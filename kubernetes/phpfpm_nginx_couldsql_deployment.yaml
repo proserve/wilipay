@@ -19,8 +19,8 @@ spec:
         ports:
           - containerPort: 80
         volumeMounts:
-          - name: cloudsql-instance-credentials
-            mountPath: /var/www/html
+          - name: cloudstorage-credentials
+            mountPath: /root/credentials
             readOnly: true
         env:
           # These secrets are required to start the pod.

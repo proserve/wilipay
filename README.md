@@ -22,3 +22,7 @@ sudo service ntp stop
 sudo ntpd -gq
 sudo service ntp start
 ```
+required
+```bash 
+php artisan passport:install
+```
