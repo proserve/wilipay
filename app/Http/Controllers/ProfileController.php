@@ -56,6 +56,9 @@ class ProfileController extends Controller
         $disk->put($fileName, file_get_contents($file->getRealPath()));
         $disk->setVisibility($fileName, 'public');
         $profile = $user->profile;
+        if(!$profile){
+            abort(400, 'Wooops! you don\'t have a profile yet, you should create your profile first');
+        }
         $profile->avatar_url = $disk->url($fileName);
         $profile->save();
         return response(null, 201);
