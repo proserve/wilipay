@@ -3,7 +3,7 @@
 return [
 
     // My params
-    'currencies' => ['EUR', 'USD', 'GBP'],
+    'currency_rate_api_url' => 'http://api.fixer.io/latest?base=USD',
     'grantName' => 'wilipay Personal Access Client',
     /*
     |--------------------------------------------------------------------------

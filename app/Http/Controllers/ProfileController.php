@@ -53,7 +53,11 @@ class ProfileController extends Controller
         $file = $request->file('avatar');
 
         $fileName = $user->id . '/avatar.'. ($file->getClientOriginalExtension() || '.png');
-        $disk->put($fileName, file_get_contents($file->getRealPath()));
+        try {
+            $disk->put($fileName, file_get_contents($file->getRealPath()));
+        } catch (\Google\Cloud\Core\Exception\GoogleException $e) {
+            abort(400, 'Error occur while adding your avatar');
+        }
         $disk->setVisibility($fileName, 'public');
         $profile = $user->profile;
         if(!$profile){

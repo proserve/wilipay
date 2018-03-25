@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
  */
-class Sold extends Model
+class Account extends Model
 {
     use SoftDeletes;
 
@@ -20,23 +20,18 @@ class Sold extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function currency()
-    {
-        return $this->belongsTo('App\Currency');
-    }
-
     public function transactions()
     {
-        return $this->belongsTo('App\Transaction');
+        return $this->hasMany('App\Transaction');
     }
     protected $fillable = [
-        'user_id', 'currency_id', 'amount',
+        'user_id', 'currency_code', 'amount',
     ];
 
      protected $visible = [
-        'amount', 'currency',
+        'amount', 'currency_code', 'id', 'transactions'
     ];
 
     protected $dateFormat = 'Y-m-d H:i:sO';
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }

@@ -21,7 +21,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $data = $request->validate([
-            'username' => 'required|string|email|max:255',
+            'username' => 'required|string|max:255',
             'password' => 'required|string|min:6',
         ]);
         $username = strtolower($data['username']);

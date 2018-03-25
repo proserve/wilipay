@@ -24,9 +24,9 @@ class User extends Authenticatable
         return $this->hasOne('App\Profile');
     }
 
-    public function solds()
+    public function accounts()
     {
-        return $this->hasMany('App\Sold');
+        return $this->hasMany('App\Account');
     }
 
     protected $dates = ['deleted_at'];

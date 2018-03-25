@@ -15,14 +15,17 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('type', ['commission', 'payment', 'exchange', 'transfer']);
+            $table->integer('account_id')->unsigned();
+            $table->integer('beneficiary_id')->unsigned()->nullable();
+            $table->enum('type', ['commission', 'payment', 'exchange_sell', 'exchange_buy', 'transfer', 'between_users']);
             $table->float('amount');
             $table->string('purpose');
             $table->string('beneficiary')->nullable();
             $table->string('payer')->nullable();
-            $table->integer('sold_id')->unsigned();
-            $table->foreign('sold_id')->references('id')->on('solds')->onDelete('cascade');
+            $table->softDeletesTz();
             $table->timestamps();
+            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->foreign('beneficiary_id')->references('id')->on('users');
         });
     }
 

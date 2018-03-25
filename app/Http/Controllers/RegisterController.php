@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Currency;
 use App\Mail\TestEmail;
 use App\Providers\AccountKit;
-use App\Sold;
+use App\Account;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -35,9 +34,8 @@ class RegisterController extends Controller
 
         $token = $user->createToken(config('app.grantName'))->accessToken;
 
-        foreach (config('app.currencies') as $currency) {
-            $currency_id = Currency::where('code', $currency)->firstOrFail()->id;
-            Sold::create(['amount' => 0, 'user_id' => $user->id, 'currency_id' => $currency_id]);
+        foreach (array_keys(Config("currencies")) as $currency) {
+            Account::create(['amount' => 0, 'user_id' => $user->id, 'currency_code' => $currency]);
         }
         return response(['token' => $token], 201);
     }

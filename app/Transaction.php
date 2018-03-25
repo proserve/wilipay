@@ -7,19 +7,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property \Carbon\Carbon $deleted_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 class Transaction extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
-        'type', 'sold_id', 'amount', 'type', 'purpose', 'beneficiary', 'payer'
+        'purpose', 'beneficiary_id', 'type', 'amount', 'account_id'
     ];
+
+    public function beneficiary()
+    {
+        return $this->belongsTo('App\User', 'beneficiary_id');
+    }
+
+    public function account()
+    {
+        return $this->belongsTo('App\Account');
+    }
+
+
 
     protected $visible = [
-        'type','sold', 'amount', 'type', 'purpose', 'beneficiary', 'payer'
+        'purpose', 'beneficiary_id', 'type', 'amount', 'account_id', 'created_at', 'id'
     ];
 
-    protected $dateFormat = 'Y-m-d H:i:sO';
-    protected $dates = ['deleted_at'];
+    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }
