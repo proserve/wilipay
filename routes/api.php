@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 Route::prefix('v1')->group(function () {
     Route::post('/register', 'RegisterController@register');
     Route::post('/login', 'LoginController@login');
+    Route::get('/logout', 'LoginController@logout');
     Route::put('/users/phone', 'RegisterController@editPhone')->middleware('auth:api');
     Route::put('/users/profile', 'ProfileController@editProfile')->middleware('auth:api');
     Route::put('/users/profile/address', 'ProfileController@editAddress')->middleware('auth:api');
@@ -35,7 +36,5 @@ Route::prefix('v1')->group(function () {
     Route::post('/transactions/between_users', 'TransactionController@betweenUsers')->middleware('auth:api');
     Route::post('/transactions/convert', 'TransactionController@convert')->middleware('auth:api');
     Route::get('/currencies_rates', 'TransactionController@getCurrenciesRates')->middleware('auth:api');
-
-
 });
 

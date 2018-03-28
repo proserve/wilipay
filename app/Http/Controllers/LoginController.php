@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
@@ -29,11 +30,17 @@ class LoginController extends Controller
         $user = User::where($field, $username)->firstOrFail();
 
         if (Hash::check($data['password'], $user->password)) {
-            $userArray = $user->toArray();
-            $profile = $user->profile;
-            $resp = $profile ? array_merge($userArray, $profile->toArray()) : $userArray;
-            return response()->json(['user' => $resp, 'token' => $user->createToken('wilipay Personal Access Client')->accessToken]);
+            $usersJson = $user->load('profile')->load('accounts.transactions')->toArray();
+            $accessToken = $user->createToken('wilipay Personal Access Client')->accessToken;
+            return response()->json(['user' => $usersJson, 'token' => $accessToken]);
         }
         abort(401);
+    }
+
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::user()->AauthAcessToken()->delete();
+        }
     }
 }

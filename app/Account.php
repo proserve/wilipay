@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Account extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Uuids;
+
+    public $incrementing = false;
 
     public function user()
     {

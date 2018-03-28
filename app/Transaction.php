@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Transaction extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Uuids;
+
+    public $incrementing = false;
 
     protected $fillable = [
         'purpose', 'beneficiary_id', 'type', 'amount', 'account_id'

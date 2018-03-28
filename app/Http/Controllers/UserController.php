@@ -25,4 +25,5 @@ class UserController extends Controller
         User::findOrFail($id)->delete();
         return response('', 200);
     }
+
 }

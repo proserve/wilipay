@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Profile extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Uuids;
+
+    public $incrementing = false;
 
     public function user()
     {

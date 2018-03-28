@@ -17,7 +17,9 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use SoftDeletes, HasApiTokens, Notifiable;
+    use SoftDeletes, HasApiTokens, Notifiable, Uuids;
+
+    public $incrementing = false;
 
     public function profile()
     {
@@ -27,6 +29,11 @@ class User extends Authenticatable
     public function accounts()
     {
         return $this->hasMany('App\Account');
+    }
+
+    public function AauthAcessToken()
+    {
+        return $this->hasMany('\App\OauthAccessToken');
     }
 
     protected $dates = ['deleted_at'];
@@ -47,7 +54,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token'
     ];
-    protected $visible = ['email', 'phone', 'national_phone', 'profile'];
+    protected $visible = ['email', 'phone', 'national_phone', 'profile', 'accounts'];
 
 
     public function setEmailAttribute($value)

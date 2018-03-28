@@ -14,9 +14,10 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('account_id')->unsigned();
-            $table->integer('beneficiary_id')->unsigned()->nullable();
+            $table->uuid('id');
+            $table->primary('id');
+            $table->uuid('account_id')->unsigned();
+            $table->uuid('beneficiary_id')->unsigned()->nullable();
             $table->enum('type', ['commission', 'payment', 'exchange_sell', 'exchange_buy', 'transfer', 'between_users']);
             $table->float('amount');
             $table->string('purpose');
