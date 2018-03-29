@@ -7,6 +7,8 @@ return [
 
     'grantName' => 'wilipay Personal Access Client',
 
+    'card_brands' => ['American Express', 'Diners Club', 'Discover', 'JCB', 'MasterCard', 'UnionPay', 'Visa', 'Unknown'],
+
     'name' => env('APP_NAME', 'Wilipay'),
 
     'env' => env('APP_ENV', 'production'),

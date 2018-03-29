@@ -36,5 +36,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/transactions/between_users', 'TransactionController@betweenUsers')->middleware('auth:api');
     Route::post('/transactions/convert', 'TransactionController@convert')->middleware('auth:api');
     Route::get('/currencies_rates', 'TransactionController@getCurrenciesRates')->middleware('auth:api');
+
+    // CARDS
+    Route::post('/cards', 'CardController@add')->middleware('auth:api');
 });
 

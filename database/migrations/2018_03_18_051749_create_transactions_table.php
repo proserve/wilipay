@@ -16,8 +16,8 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
-            $table->uuid('account_id')->unsigned();
-            $table->uuid('beneficiary_id')->unsigned()->nullable();
+            $table->uuid('account_id');
+            $table->uuid('beneficiary_id')->nullable();
             $table->enum('type', ['commission', 'payment', 'exchange_sell', 'exchange_buy', 'transfer', 'between_users']);
             $table->float('amount');
             $table->string('purpose');

@@ -36,6 +36,11 @@ class User extends Authenticatable
         return $this->hasMany('\App\OauthAccessToken');
     }
 
+    public function cards()
+    {
+        return $this->hasMany('\App\Card');
+    }
+
     protected $dates = ['deleted_at'];
     /**
      * The attributes that are mass assignable.
