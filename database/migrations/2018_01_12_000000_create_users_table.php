@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('verified')->default(0);
             $table->string('email_token')->nullable();
             $table->string('fb_account_kit_id')->nullable()->unique();
+            $table->string('stripe_customer_id')->nullable()->unique();
             $table->tinyInteger('blocked')->default(1);
             $table->rememberToken();
             $table->softDeletesTz();

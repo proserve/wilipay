@@ -22,8 +22,8 @@ class CreateCardsTable extends Migration
             $table->integer('exp_month');
             $table->string('last4');
             $table->string('country');
-            $table->string('card_id')->unique(); // from stripe
-            $table->string('token_id'); // from stripe
+//            $table->string('card_id')->unique(); // from stripe
+            $table->string('source_id')->unique();; // from stripe
             $table->softDeletesTz();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');

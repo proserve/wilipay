@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+
 Route::prefix('v1')->group(function () {
     Route::post('/register', 'RegisterController@register');
     Route::post('/login', 'LoginController@login');
@@ -35,9 +36,13 @@ Route::prefix('v1')->group(function () {
     // Transactions routes
     Route::post('/transactions/between_users', 'TransactionController@betweenUsers')->middleware('auth:api');
     Route::post('/transactions/convert', 'TransactionController@convert')->middleware('auth:api');
-    Route::get('/currencies_rates', 'TransactionController@getCurrenciesRates')->middleware('auth:api');
+    Route::post('/transactions/top-up/card', 'TransactionController@topUp')->middleware('auth:api');
+//    Route::post('/transactions/top-up/transfer', 'TransactionController@sepaTransfer')->middleware('auth:api');
+    Route::get('/currencies_rates', 'TransactionController@getCurrenciesRates')
+        ->middleware('auth:api');
 
     // CARDS
     Route::post('/cards', 'CardController@add')->middleware('auth:api');
+    Route::get('/cards', 'CardController@list')->middleware('auth:api');
 });
 

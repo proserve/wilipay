@@ -22,10 +22,10 @@ class Card extends Model
     }
 
     protected $fillable = [
-        'user_id', 'brand', 'last4', 'exp_year', 'exp_month', 'country', 'card_id', 'token_id',
+        'user_id', 'brand', 'last4', 'exp_year', 'exp_month', 'country','source_id'
     ];
 
-    protected $visible = ['brand', 'exp_year', 'exp_month', 'country', 'last4'];
+    protected $visible = ['brand', 'exp_year', 'exp_month', 'country', 'last4', 'id'];
 
      protected $dates = ['deleted_at'];
 }

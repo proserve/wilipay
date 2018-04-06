@@ -33,6 +33,7 @@ install:
   - composer install --no-interaction --optimize-autoloader
   - echo ACCOUNTKIT_APP_ID=$ACCOUNTKIT_APP_ID >> .env
   - echo ACCOUNTKIT_APP_SECRET=$ACCOUNTKIT_APP_SECRET >> .env
+  - echo STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY >> .env
 
 before_deploy:
   - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi

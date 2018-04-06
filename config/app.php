@@ -9,6 +9,8 @@ return [
 
     'card_brands' => ['American Express', 'Diners Club', 'Discover', 'JCB', 'MasterCard', 'UnionPay', 'Visa', 'Unknown'],
 
+    'stripe_secret_key' => env('STRIPE_SECRET_KEY'),
+
     'name' => env('APP_NAME', 'Wilipay'),
 
     'env' => env('APP_ENV', 'production'),
