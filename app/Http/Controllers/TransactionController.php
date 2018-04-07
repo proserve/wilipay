@@ -63,15 +63,23 @@ class TransactionController extends Controller
             try {
                 $beneficiaryAccount->save();
                 $payerAccount->save();
+                $trans = Transaction::create([
+                    'purpose' => $validatedData['purpose'],
+                    'beneficiary_id' => $beneficiary->id,
+                    'type' => 'between_users',
+                    'amount' => -$amount,
+                    'account_id' => $validatedData['account_id']
+                ]);
                 Transaction::create([
                     'purpose' => $validatedData['purpose'],
                     'beneficiary_id' => $beneficiary->id,
                     'type' => 'between_users',
-                    'amount' => $amount,
-                    'account_id' => $validatedData['account_id']
+                    'amount' => -$amount,
+                    'account_id' => $beneficiary->accounts[0]->id
                 ]);
+                // TODO: Send Socket to beneficiary user
                 DB::commit();
-                return response('', 200);
+                return $trans;
             } catch (\Exception $e) {
                 DB::rollback();
                 abort(400, 'Transaction can not be completed please try again');
@@ -79,7 +87,7 @@ class TransactionController extends Controller
         }
     }
 
-    public function getCurrenciesRates()
+    public static function getCurrenciesRates()
     {
         $httpClient = new Client();
         $data = $httpClient->request('GET', config('app.currency_rate_api_url'));
@@ -117,20 +125,19 @@ class TransactionController extends Controller
             return abort(400, 'convert data are not correct');
         }
 
-
         try {
             $sellAccount->amount -= $sellAmount;
             $buyAccount->amount += $buyAmount;
             $sellAccount->save();
             $buyAccount->save();
-            Transaction::create([
+            $transactionSell = Transaction::create([
                 'purpose' => 'Currency Exchange from ' . $sellAccount->currency_code . ' to ' . $buyAccount->currency_code,
                 'beneficiary_id' => $user->id,
                 'type' => 'exchange_sell',
-                'amount' => $sellAmount,
+                'amount' => -$sellAmount,
                 'account_id' => $sellAccount->id
             ]);
-            Transaction::create([
+            $transactionBuy = Transaction::create([
                 'purpose' => 'Currency Exchange from ' . $sellAccount->currency_code . ' to ' . $buyAccount->currency_code,
                 'beneficiary_id' => $user->id,
                 'type' => 'exchange_buy',
@@ -138,7 +145,7 @@ class TransactionController extends Controller
                 'account_id' => $buyAccount->id
             ]);
             DB::commit();
-            return response('', 200);
+            return [$transactionBuy, $transactionSell];
         } catch (\Exception $e) {
             DB::rollback();
             abort(400, 'Transaction can not be completed please try again');
