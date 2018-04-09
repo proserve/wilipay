@@ -9,8 +9,10 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Stripe\Customer;
 
 
 class RegisterController extends Controller
@@ -27,17 +29,34 @@ class RegisterController extends Controller
     {
         $data = $request->all();
         $this->validator($data)->validate();
-        $user = User::create([
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        DB::beginTransaction();
+        $customer = null;
+        try {
+            $user = User::create([
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]);
 
-        $token = $user->createToken(config('app.grantName'))->accessToken;
+            $token = $user->createToken(config('app.grantName'))->accessToken;
 
-        foreach (array_keys(Config("currencies")) as $currency) {
-            Account::create(['amount' => 0, 'user_id' => $user->id, 'currency_code' => $currency]);
+            foreach (array_keys(Config("currencies")) as $currency) {
+                Account::create(['amount' => 0, 'user_id' => $user->id, 'currency_code' => $currency]);
+            }
+            $customer = Customer::create(array(
+              "description" => "Customer for ". $user->email,
+              "email" => $user->email,
+              "metadata" => ["id" => $user->id]
+            ));
+            $user->stripe_customer_id = $customer->id;
+            $user->save();
+            DB::commit();
+            return response(['token' => $token], 201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            if($customer && $customer->id) $customer->delete();
+            abort(400, $e->getMessage() || 'Error while creating your account, please try again');
         }
-        return response(['token' => $token], 201);
+
     }
 
     public function editPhone(Request $request)

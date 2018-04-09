@@ -30,9 +30,10 @@ class LoginController extends Controller
         $user = User::where($field, $username)->firstOrFail();
 
         if (Hash::check($data['password'], $user->password)) {
-            $usersJson = $user->load('profile')->load('accounts.transactions')->toArray();
+            $usersJson = $user->load('profile')->load('accounts.transactions')->load('cards')->toArray();
             $accessToken = $user->createToken('wilipay Personal Access Client')->accessToken;
-            return response()->json(['user' => $usersJson, 'token' => $accessToken]);
+            $currenciesRates = TransactionController::getCurrenciesRates();
+            return response()->json(['user' => $usersJson, 'token' => $accessToken, 'rates' => $currenciesRates]);
         }
         abort(401);
     }

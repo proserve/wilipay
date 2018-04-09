@@ -33,7 +33,12 @@ class User extends Authenticatable
 
     public function AauthAcessToken()
     {
-        return $this->hasMany('\App\OauthAccessToken');
+        return $this->hasMany('App\OauthAccessToken');
+    }
+
+    public function cards()
+    {
+        return $this->hasMany('App\Card');
     }
 
     protected $dates = ['deleted_at'];
@@ -54,7 +59,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token'
     ];
-    protected $visible = ['email', 'phone', 'national_phone', 'profile', 'accounts'];
+    protected $visible = ['email', 'phone', 'national_phone', 'profile', 'accounts', 'cards'];
 
 
     public function setEmailAttribute($value)

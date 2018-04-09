@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Card;
 use App\Transaction;
 use App\User;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use function MongoDB\BSON\toJSON;
 use GuzzleHttp\Client;
+use Stripe\Charge;
 
 class TransactionController extends Controller
 {
@@ -61,15 +63,23 @@ class TransactionController extends Controller
             try {
                 $beneficiaryAccount->save();
                 $payerAccount->save();
+                $trans = Transaction::create([
+                    'purpose' => $validatedData['purpose'],
+                    'beneficiary_id' => $beneficiary->id,
+                    'type' => 'between_users',
+                    'amount' => -$amount,
+                    'account_id' => $validatedData['account_id']
+                ]);
                 Transaction::create([
                     'purpose' => $validatedData['purpose'],
                     'beneficiary_id' => $beneficiary->id,
                     'type' => 'between_users',
-                    'amount' => $amount,
-                    'account_id' => $validatedData['account_id']
+                    'amount' => -$amount,
+                    'account_id' => $beneficiary->accounts[0]->id
                 ]);
+                // TODO: Send Socket to beneficiary user
                 DB::commit();
-                return response('', 200);
+                return $trans;
             } catch (\Exception $e) {
                 DB::rollback();
                 abort(400, 'Transaction can not be completed please try again');
@@ -77,7 +87,7 @@ class TransactionController extends Controller
         }
     }
 
-    public function getCurrenciesRates()
+    public static function getCurrenciesRates()
     {
         $httpClient = new Client();
         $data = $httpClient->request('GET', config('app.currency_rate_api_url'));
@@ -114,34 +124,94 @@ class TransactionController extends Controller
         if (round($sellAmount * ($buyRate / $sellRate), 2) != $buyAmount) {
             return abort(400, 'convert data are not correct');
         }
-        DB::beginTransaction();
+
         try {
             $sellAccount->amount -= $sellAmount;
             $buyAccount->amount += $buyAmount;
             $sellAccount->save();
             $buyAccount->save();
-            Transaction::create([
-                'purpose' => 'Currency Exchange from '. $sellAccount->currency_code. ' to '. $buyAccount->currency_code,
+            $transactionSell = Transaction::create([
+                'purpose' => 'Currency Exchange from ' . $sellAccount->currency_code . ' to ' . $buyAccount->currency_code,
                 'beneficiary_id' => $user->id,
                 'type' => 'exchange_sell',
-                'amount' => $sellAmount,
+                'amount' => -$sellAmount,
                 'account_id' => $sellAccount->id
             ]);
-            Transaction::create([
-                'purpose' => 'Currency Exchange from '. $sellAccount->currency_code. ' to '. $buyAccount->currency_code,
+            $transactionBuy = Transaction::create([
+                'purpose' => 'Currency Exchange from ' . $sellAccount->currency_code . ' to ' . $buyAccount->currency_code,
                 'beneficiary_id' => $user->id,
                 'type' => 'exchange_buy',
                 'amount' => $buyAmount,
                 'account_id' => $buyAccount->id
             ]);
             DB::commit();
-            return response('', 200);
+            return [$transactionBuy, $transactionSell];
         } catch (\Exception $e) {
             DB::rollback();
             abort(400, 'Transaction can not be completed please try again');
         }
     }
 
+    function topUp(Request $request)
+    {
+        $validatedData = $request->validate([
+            'amount' => 'required|numeric|min:0',
+            'cardId' => 'required',
+            'accountID' => 'required',
+        ]);
+
+        $user = Auth::user();
+
+        $amount = $validatedData['amount'];
+        if ($amount == 0) {
+            return abort(400, 'top up amount should be greater then 0');
+        }
+        $card = Card::where('id', $validatedData['cardId'])->where('user_id', $user->id)->firstOrFail();
+        $account = Account::where('id', $validatedData['accountID'])->where('user_id', $user->id)->firstOrFail();
+
+        DB::beginTransaction();
+        try {
+            // TODO : manage currency conversion
+            $account->amount += $amount;
+            $account->save();
+            $topUpTransaction = Transaction::create([
+                'purpose' => 'Card Top from ' . $card->brand . ' card that ends with ' . $card->last4,
+                'beneficiary_id' => $user->id,
+                'type' => 'payment',
+                'amount' => $amount,
+                'account_id' => $account->id
+            ]);
+            $charge = Charge::create([
+                "amount" => $amount * 100,
+                "currency" => $account->currency_code,
+                "customer" => $user->stripe_customer_id,
+                "source" => $card->source_id,
+                "description" => "top up "
+            ]);
+            DB::commit();
+            return $topUpTransaction;
+        } catch (\Exception $e) {
+            DB::rollback();
+            abort(400, 'Transaction can not be completed please try again');
+        }
+    }
+
+    function debitFromStripeCard($amount, $currency_code, $description, $customerId)
+    {
+        try {
+            return Charge::create(array(
+                "amount" => $amount * 100,
+                "currency" => $currency_code,
+                "description" => $description,
+                "customer" => $customerId,
+            ));
+        } catch (\Stripe\Error\Card $e) {
+            // Since it's a decline, \Stripe\Error\Card will be caught
+            $body = $e->getJsonBody();
+            $err = $body['error'];
+            abort(400, $err['message']);
+        }
+    }
 
     function createTransaction(Request $request, $id)
     {
