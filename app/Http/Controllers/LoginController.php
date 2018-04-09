@@ -1,14 +1,47 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
-use App\Http\AccountKit;
-class LoginController
+use App\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class LoginController extends Controller
 {
-    public function otpLogin(Request $request)
+    public function __construct()
     {
-        $client = new AccountKit();
-        $data = $client->data($request->code);
-        return response()->json($data);
+        $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request)
+    {
+        $data = $request->validate([
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+        $username = strtolower($data['username']);
+        $field = filter_var($username, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        $user = User::where($field, $username)->firstOrFail();
+
+        if (Hash::check($data['password'], $user->password)) {
+            $usersJson = $user->load('profile')->load('accounts.transactions')->load('cards')->toArray();
+            $accessToken = $user->createToken('wilipay Personal Access Client')->accessToken;
+            $currenciesRates = TransactionController::getCurrenciesRates();
+            return response()->json(['user' => $usersJson, 'token' => $accessToken, 'rates' => $currenciesRates]);
+        }
+        abort(401);
+    }
+
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::user()->AauthAcessToken()->delete();
+        }
     }
 }

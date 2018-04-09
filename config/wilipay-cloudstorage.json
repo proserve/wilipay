@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "beetfree-193913",
+  "private_key_id": "88f5c8c430b4970bfe6251cb4aec1a50c280da7d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIABwjcL/bVLXJ\nvVJuUekhWcW/m/zXpEFN9bcg4vm9xmFCt4nt+k9jxJHMn+VMdMa3ZuuxTCWHOGp/\ngMl929E210EEHloBlUO7241aAcj/xpBiyYzBMOzmyStC6izWV3IUcgBdYjrqfXa3\n2IESHX9Us9L4bwAV7EFdBVazHn9B/tbDudqdxc6IKS9NXWLrZyFGnZsOquB9xTZ2\nutEHC4qJ4gYhKBh06aAZegqvwUruDGui8vjXALKue/8ZoGbVy6KWwvzxTYezGDLt\nMedFAuU4q624KdbvvpPJjySofgzlRTAd0cDnZ4hlfqmgUBicUVEouPPgNDRvjRgg\nG79/G2D7AgMBAAECggEAB431giMypArFmRq1H+SpLTDSZuPx/4U9UEANTEk2jMQP\nDXGYXKxdTlPw++04QJSSov/YvEg3jK2FXE6VjdL9SpiD5K9uz+t+9PwckT9LA9pQ\nvuKFFhEOicMkhrEIw4nnDb2mpOBegFf/4X7klTYXBrCKMgcjVjCn4WcfuMFYpjn0\ncLS13oBrqboGCCkey0948XhX4bsvc2G+8BGEtVl1yU+X73FTOpZ2LBOwWlapUukJ\nr4PeRwQUIiLaZFsUCv3G2V+qPo3l42fzVzRY4IWrPQmMdQCzznsaPC7D13BGN3lV\nujr8qmf3kkBNBWAXHIZ2NgwdgpoinTziHZzWUROdxQKBgQDqyUJWwgU1KMjNHQfz\nDX8HVy2UQmIKm50K74Ea+8cLd4KwZsDollRgtE76jzPVJNzKC3zHo1nNtqh76SoS\nK4JX9fG9iMCiishzCo+ed0X0y3wHopyiVRAfQj51ucfi7G9SZajsiNVJsHZquWRs\n6dx3qmXm04kaIQS5i+TxQsd0XwKBgQDaEjyCizcKzUkj93DLZReX81ZycZV/bD7I\n1tu7OnVYXfrlG23+mhqFTHd+J/8ytv/lX6ogkG2+N694Ty3ZLqyVvhT4pqKra9tv\nhFpnUvtFQYQWIJmvwC2ho5lG7d9Oc4e3Zd81voZ1SXGYixPzm/TZ2r4GuAJpvc5K\nxpTQ1HS45QKBgQC283UaHb3pGoq+Ki0TnCSsF6aQrNmw4mmRJ+g2mpMTwGC6DJet\npdbCND6GyCffowXY+vKUrhlAT2EijSIXXogG+sMQqgtRnUttOYGIPfDpO9a+LFxZ\nsmcJtJjvK4EytoJYdpcXGdj5vuPHbgdvRxxgswsMvzFKhwgjfXs89IhviQKBgCNS\nJtjiIaUvQPSBZJSdKCglctAQk61S5Ax1uJtnyY/pkPTA75z4aulCTGxzoAMf3uzR\nBOZHXm8b5+DtujheNff/FLh9jQWE78LtRhNMPoSmKvXGi/4Ke5mdvPrfFndHgSj0\naCX1WSPwJGUXycCAdzU+F99QuJtV8e7soTf94XX9AoGAcUzP0hF27oxFRW08Xksj\nKdv/YOCLxHfZAqY/Q4JfvTGqru9iblY4Bi0inqT9mTWNV752d12GiVqx0KD5DGa5\nrkJJgUb9h3uYI472pRV15QEKNLesN7gndSgHzE+2fJ220b7e/svbCWHs8aB+oO2Z\nsBByuFR/UtOh3ppdVKOtTsc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "cloudstorage@beetfree-193913.iam.gserviceaccount.com",
+  "client_id": "116450207082912413061",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloudstorage%40beetfree-193913.iam.gserviceaccount.com"
+}

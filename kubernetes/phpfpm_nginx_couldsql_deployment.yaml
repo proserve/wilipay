@@ -14,10 +14,17 @@ spec:
     spec:
       containers:
       - name: php-fpm-nginx
-        image: eu.gcr.io/beetfree-193913/wilipay-laravel-backend:0.1.0
+        image: eu.gcr.io/beetfree-193913/wilipay-web:4b96658a82f8da493a33e1170fef35b4e985bd28
         imagePullPolicy: IfNotPresent
+        command: ["chmod ",
+                  "-instances=beetfree-193913:europe-west1:wilipay-cloud-sql=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/wilipay-cloud-sql.json"]
         ports:
           - containerPort: 80
+        volumeMounts:
+          - name: cloudstorage-credentials
+            mountPath: /root/credentials
+            readOnly: false
         env:
           # These secrets are required to start the pod.
           # [START cloudsql_DB_secrets]
@@ -36,7 +43,7 @@ spec:
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
                   "-instances=beetfree-193913:europe-west1:wilipay-cloud-sql=tcp:5432",
-                  "-credential_file=/secrets/cloudsql/credentials.json"]
+                  "-credential_file=/secrets/cloudsql/wilipay-cloud-sql.json"]
         volumeMounts:
           - name: cloudsql-instance-credentials
             mountPath: /secrets/cloudsql
@@ -45,4 +52,7 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
+        - name: cloudstorage-credentials
+          secret:
+            secretName: cloudstorage-credentials
       # [END volumes]
