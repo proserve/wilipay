@@ -1,6 +1,8 @@
 FROM proserve/nginx-php-fpm-laravel:0.1.0
 
 ADD nginx-site.conf /etc/nginx/sites-available/default.conf
+RUN rm -Rf /etc/nginx/nginx.conf
+ADD nginx.conf /etc/nginx/nginx.conf
 
 COPY . /var/www/html/
 WORKDIR /var/www/html/
