@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use function MongoDB\BSON\toJSON;
 use GuzzleHttp\Client;
 use Stripe\Charge;
 
@@ -23,12 +22,12 @@ class TransactionController extends Controller
     function list(Request $request)
     {
         $user = Auth::user();
-        $accounts = $user->accounts;
+        $accounts = $user->accounts->load('transactions');
         $resp = [];
         foreach ($accounts as $account) {
-            $resp[$account->id] = $account->transactions;
+            $resp[$account->currency_code] = $account->transactions;
         }
-        return response() . toJSON($resp);
+        return $resp;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Account;
 use App\Card;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
