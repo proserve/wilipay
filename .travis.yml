@@ -44,13 +44,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: chmod +x $TRAVIS_BUILD_DIR/scripts/ci-deploy-prod.sh && $TRAVIS_BUILD_DIR/scripts/ci-deploy-prod.sh
-    skip_cleanup: true
-    on:
-      branch: master
-
-  - provider: script
     script: chmod +x $TRAVIS_BUILD_DIR/scripts/ci-deploy-staging.sh && $TRAVIS_BUILD_DIR/scripts/ci-deploy-staging.sh
     skip_cleanup: true
     on:
-      branch: develop
+      branch: master
