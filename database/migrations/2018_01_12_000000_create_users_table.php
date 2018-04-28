@@ -25,10 +25,10 @@ class CreateUsersTable extends Migration
             $table->string('email_token')->nullable();
             $table->string('fb_account_kit_id')->nullable()->unique();
             $table->string('stripe_customer_id')->nullable()->unique();
-            $table->tinyInteger('blocked')->default(1);
+            $table->tinyInteger('blocked')->default(0);
             $table->rememberToken();
             $table->softDeletesTz();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

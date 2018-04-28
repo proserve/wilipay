@@ -42,11 +42,15 @@ class RegisterController extends Controller
             foreach (array_keys(Config("currencies")) as $currency) {
                 Account::create(['amount' => 0, 'user_id' => $user->id, 'currency_code' => $currency]);
             }
-            $customer = Customer::create(array(
-              "description" => "Customer for ". $user->email,
-              "email" => $user->email,
-              "metadata" => ["id" => $user->id]
-            ));
+            try {
+                $customer = Customer::create(array(
+                    "description" => "Customer for " . $user->email,
+                    "email" => $user->email,
+                    "metadata" => ["id" => $user->id]
+                ));
+            } catch (\Stripe\Error\Base $e) {
+                $e.message();
+            }
             $user->stripe_customer_id = $customer->id;
             $user->save();
             DB::commit();

@@ -25,7 +25,7 @@ class CreateCardsTable extends Migration
 //            $table->string('card_id')->unique(); // from stripe
             $table->string('source_id')->unique();; // from stripe
             $table->softDeletesTz();
-            $table->timestamps();
+            $table->timestampsTz();
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

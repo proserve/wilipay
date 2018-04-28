@@ -36,6 +36,6 @@ class Transaction extends Model
         'purpose', 'beneficiary_id', 'type', 'amount', 'account_id', 'created_at', 'id'
     ];
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:sO';
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }

@@ -26,7 +26,7 @@ class CreateTransactionsTable extends Migration
             $table->string('beneficiary')->nullable();
             $table->string('payer')->nullable();
             $table->softDeletesTz();
-            $table->timestamps();
+            $table->timestampsTz();
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->foreign('card_id')->references('id')->on('cards');
             $table->foreign('beneficiary_id')->references('id')->on('users');
