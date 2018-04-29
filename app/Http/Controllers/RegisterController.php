@@ -28,7 +28,11 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $data = $request->all();
+        if(isset($data['email']) ){
+            $data['email'] = strtolower($data['email']);
+        }
         $this->validator($data)->validate();
+
         DB::beginTransaction();
         $customer = null;
         try {
